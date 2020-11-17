@@ -1,15 +1,16 @@
-# AcedemicProjects
+# AcedemicProjects - Animations
 
-The first interface we made was the IModel interface. This interface includes the methods addShape(IShape shape), removeShape(char name), getShapes(), animate(), and textOutput(). These methods allow us to interact with different shapes in our model.
-All shapes in this design implement the IShape interface. This allows us to get the x,y position of the shape, the r, g, and b color values of the shape, and the width and height. It also allows us to set the x,y position, set the width and height, and set the r, g, and b color values. This allows us the ability to animate them in the future.
-An AShape implements IShape and has a char name and int value for x, y, width, height, red, green, blue, and current time. This allows us to maintain certain invariants such as positive size, color values between 0 - 255, and time strictly increasing. Name is also an invariant.
-An animation is a class that has a shape to be animated, and a HashMap that keeps track of the shape's both new and old properties. It has one method get text which produces a string of the current animation with shape name, start and end times, start and end positions, start and end size, and start and end color. 
-The class Model implements IModel and allows us to animate shapes. This class contains a HashMap with all the shapes in the model along with all the animations they have been through. The method animate() creates a new animation and resets all the values for the given IShape. This methods keeps all the class invariants for AShape intact. The method textOutput() uses animation.getText for all the shapes and all the animations for each shape in the HashMap.
-The View interface is the representation for the different types of view which implement this interface. The textual view returns a string interpretation of the animation. The SVG view returns a string containing an SVG interpretation of the animation in HTML. The third view, the visual view, returns a JFrame animation. 
-The VisualView uses a class called Drawing which helps paint the shapes on the JFrame. In this Drawing class we set up an initial time of 0 and start a Timer with a period based on tickrae specified by client. The Timer will run a TimerTask at the end of each period or tick. Our task simply includes repainting and incrementing the time. The paint method uses linear interpolation to get the value of each characteristic of the shape at the given time. We use a method shape.draw which uses dynamic dispatch to properly fill each shape on the screen.
-The commands class is used to interpret the different command inputs. It sets up the input and output files, reads the commands from the input file and outputs the expected view. 
-For the Assignment 7, we had to rethink how we can play an animation based on KeyFrames. To do this we added a new map to our model. This map contains all the shapes in the model as keys and an ArrayList of KeyFrames as values. A KeyFrame is a class we made that is similar to The animation class we created. The class uses another class called properties so that we can map time values to the characteristics of the shape.
+The goal of this project is to intake a text file containing animations in the format: motion disk1 1 190 180 20 30 0 49 90  1 190 180 20 30 0 49 90. In this way the program receives animations containg information on starting position, color, size and time of a given shape along with the values at the end of the animation. The program uses a model view controller design in order to produce a visual rendering of the text input. The program is also capable of outtputting a textual and svg output using different view implementations.
 
-We implemented a new view called EnhancedView which extends view. This view uses a new class called EnhancedDrawing which allows us to override run and paint. The new run method allows us to pause and restart animations by pausing the time value we have or setting it back to zero.
-We created a Controller class which acts as a listener for user input from key presses. It contains a map of KeyEvents to IFeatures. An IFeature has only one method run. These methods simply perform the correct task based on user input. 
-Side notes: equals() and hashCode() have been rewritten in all IShapes so that they can be differentiated based on name only since this is the only final field in these classes.
+The program parses the input data and stores the information in the model. Each shape is saved as an IShape which contains its name and current properties. IAnimations contain a shape along with the starting and ending values. The model contains a HashMap with IShapes mapped to an ArrayList of IAnimations. The visual view uses JFrames and and Canvas to create the animation. The Canvas is repainted every tick and a timer continously runs. Each tick we use a function linearInterpolate to find the values of a shape at a given time using linear interpolation. We use the starting and ending values from the model for each shape if our time is within the range of the animation. We apply linearinterpolate and then draw these values to the Canvas. The result is a continuous motion animation depicting the shapes moving across a pop up screen.
+
+# Program Arguements
+
+To watch the animation of a hanoi tower included in this repo enter the following arguement in program arguements:
+-in <directory>\hanoi.txt -view visual -speed 100
+
+-in represents the input file adress
+-view can be either visual, textual, or svg text
+-speed is the animation rate the higher the number the slower the animation
+
+
